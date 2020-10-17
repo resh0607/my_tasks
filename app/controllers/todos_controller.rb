@@ -1,16 +1,16 @@
 class TodosController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-
+  #todo: add enum for ability to find by id
   def create
     project = Project.find_or_create_by(title: todo_project_params[:project_title])
     todo = project.todos.new(todo_params)
 
-    if todo.valid?
+    if todo.valid? && project.valid?
       todo.save!
       render json: todo
     else
-      render json: todo.errors
+      render json: [todo.errors, project.errors]
     end
   end
 
